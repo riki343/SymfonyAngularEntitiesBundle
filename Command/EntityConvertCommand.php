@@ -71,15 +71,21 @@ class EntityConvertCommand extends ContainerAwareCommand
     private function generateConstructor($entity, $classMetadata) {
         $fields = [];
         $fields[] = sprintf("\t\tfunction %s(data) {\n", $entity);
-        $fields[] = "\t\tif (angular.isDefined(data)) {\n";
+        $fields[] = "\t\t\tif (angular.isDefined(data)) {\n";
         foreach ($classMetadata->getFieldNames() as $item) {
-            $item = $this->handleField($item, $classMetadata->getName());
+            $item = $this->handleField($item, $classMetadata->getName(), true);
             if ($item !== null) {
                 $fields[] = $item;
             }
         }
-        $fields[] = "\t\t} else {\n";
-
+        $fields[] = "\t\t\t} else {\n";
+        foreach ($classMetadata->getFieldNames() as $item) {
+            $item = $this->handleField($item, $classMetadata->getName(), false);
+            if ($item !== null) {
+                $fields[] = $item;
+            }
+        }
+        $fields[] = "\t\t\t}\n";
         $fields[] = "\t\t}\n\n";
 
         return $fields;
