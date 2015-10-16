@@ -1,0 +1,30 @@
+{
+  "name":        "riki34/symfony-angular-entities",
+  "type":        "symfony-bundle",
+  "description": "This bundle lets you convert your symfony entities to angular factories.",
+  "keywords":    ["riki34", "angular", "entity", "bundle"],
+  "homepage":    "https://github.com/riki343/SymfonyAngularEntitiesBundle",
+  "license":     "MIT",
+
+  "authors": [
+    {
+      "name": "Vladislav Kosko",
+      "homepage": "http://github.com/riki343"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.3.2",
+    "symfony/framework-bundle": "~2.2"
+  },
+
+  "minimum-stability": "dev",
+
+  "autoload": {
+    "psr-0": {
+      "riki34\\SymfonyAngularEntitiesBundle": ""
+    }
+  },
+
+  "target-dir": "riki34/SymfonyAngularEntitiesBundle"
+}
