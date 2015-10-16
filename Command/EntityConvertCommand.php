@@ -71,12 +71,15 @@ class EntityConvertCommand extends ContainerAwareCommand
     private function generateConstructor($entity, $classMetadata) {
         $fields = [];
         $fields[] = sprintf("\t\tfunction %s(data) {\n", $entity);
+        $fields[] = "\t\tif (angular.isDefined(data)) {\n";
         foreach ($classMetadata->getFieldNames() as $item) {
             $item = $this->handleField($item, $classMetadata->getName());
             if ($item !== null) {
                 $fields[] = $item;
             }
         }
+        $fields[] = "\t\t} else {\n";
+
         $fields[] = "\t\t}\n\n";
 
         return $fields;
@@ -134,18 +137,23 @@ class EntityConvertCommand extends ContainerAwareCommand
      * @param string $class
      * @return string
      */
-    function handleField($field, $class) {
+    function handleField($field, $class, $defined) {
         $annotationsReader = $this->getContainer()->get('annotation_reader');
         $reflectionProperty = new \ReflectionProperty($class, $field);
         $columnAnnotation = $annotationsReader->getPropertyAnnotation($reflectionProperty, 'Doctrine\ORM\Mapping\Column');
         if ($columnAnnotation !== null) {
-            switch($columnAnnotation->type) {
-                case 'integer':
-                case 'string':
-                case 'text':
-                case 'boolean':
-                case 'array':
-                    return "\t\t\tthis.$field = data.$field;\n";
+            if ($defined) {
+                return "\t\t\t\tthis.$field = data.$field;\n";
+            } else {
+                switch($columnAnnotation->type) {
+                    case 'integer':     return "\t\t\t\tthis.$field = 0;\n";
+                    case 'string':      return "\t\t\t\tthis.$field = '';\n";
+                    case 'text':        return "\t\t\t\tthis.$field = '';\n";
+                    case 'boolean':     return "\t\t\t\tthis.$field = false;\n";
+                    case 'array':       return "\t\t\t\tthis.$field = [];\n";
+                    case 'datetime':    return "\t\t\t\tthis.$field = new Date();\n";
+                    case 'date':        return "\t\t\t\tthis.$field = new Date();\n";
+                }
             }
         }
 
