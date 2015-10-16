@@ -5,6 +5,7 @@
   "keywords":    ["riki34", "angular", "entity", "bundle"],
   "homepage":    "https://github.com/riki343/SymfonyAngularEntitiesBundle",
   "license":     "MIT",
+  "version":     "dev-master",
 
   "authors": [
     {
